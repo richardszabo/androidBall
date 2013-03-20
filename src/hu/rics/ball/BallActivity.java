@@ -1,32 +1,31 @@
 package hu.rics.ball;
 
-import java.util.List;
-
-import android.app.Activity;
-import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.app.*;
+import android.content.*;
+import android.hardware.*;
+import android.os.*;
+import android.util.*;
+import android.widget.*;
+import java.util.*;
 
 public class BallActivity extends Activity implements SensorEventListener {
 
+ 	public static final String TAG = "Ball";	
 	private boolean hassensor;
 
-	private final Handler rotvectEventHandler 				= new Handler() {
+	final Handler rotvectEventHandler 				= new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			Bundle data = msg.getData();
 			((TextView) findViewById(R.id.rotxtext)).setText(data.getString("x"));
 			((TextView) findViewById(R.id.rotytext)).setText(data.getString("y"));
 			((TextView) findViewById(R.id.rotztext)).setText(data.getString("z"));
-			((TextView) findViewById(R.id.disxtext)).setText(data.getString("disx"));
-			((TextView) findViewById(R.id.disytext)).setText(data.getString("disy"));
+			((TextView) findViewById(R.id.disxtext)).setText(Float.valueOf(data.getFloat("disx")).toString());
+			((TextView) findViewById(R.id.disytext)).setText(Float.valueOf(data.getFloat("disy")).toString());			
+			Log.i(TAG, "handle:" + data.getString("alma") + ":"+ data.getFloat("disy") +":");
+			//((BallView) findViewById(R.id.ballview)).
+			//	setCoord(data.getFloat("disx"),
+			//			 data.getFloat("disy"));		
 		}
 	};
 
@@ -43,7 +42,8 @@ public class BallActivity extends Activity implements SensorEventListener {
 
 		hassensor = true;
 		setContentView(R.layout.ball);
-
+		((BallView) findViewById(R.id.ballview)).setParent(this);
+		
 		setTitle("Rotational Vector");
 	}
 
@@ -97,11 +97,13 @@ public class BallActivity extends Activity implements SensorEventListener {
 		data.putString("x", "Rotational Vector X: "+rvx);
 		data.putString("y", "Rotational Vector Y: "+rvy);
 		data.putString("z", "Rotational Vector Z: "+rvz);
-		data.putString("disx", "Displacement Vector X: "+disx);
-		data.putString("disy", "Displacement Vector Y: "+disy);
-		Message msg = Message.obtain();
-		msg.setData(data);
-		rotvectEventHandler.sendMessage(msg);
+		//data.putFloat("disx", disx);
+		//data.putFloat("disy", disy);
+		((BallView) findViewById(R.id.ballview)).
+			setCoord(disx,disy);		
+		//Message msg = Message.obtain();
+		//msg.setData(data);
+		//rotvectEventHandler.sendMessage(msg);
 	}
 }
 

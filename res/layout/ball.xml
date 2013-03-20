@@ -45,4 +45,9 @@
         android:textColor="#000"
         android:text="No Rotation Vector Sensor"
 	/>
+	<hu.rics.ball.BallView 
+        android:id="@+id/ballview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+	/>
 </LinearLayout>	
