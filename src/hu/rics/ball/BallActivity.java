@@ -20,9 +20,8 @@ public class BallActivity extends Activity implements SensorEventListener {
 			((TextView) findViewById(R.id.rotxtext)).setText(data.getString("x"));
 			((TextView) findViewById(R.id.rotytext)).setText(data.getString("y"));
 			((TextView) findViewById(R.id.rotztext)).setText(data.getString("z"));
-			((TextView) findViewById(R.id.disxtext)).setText(Float.valueOf(data.getFloat("disx")).toString());
-			((TextView) findViewById(R.id.disytext)).setText(Float.valueOf(data.getFloat("disy")).toString());			
-			Log.i(TAG, "handle:" + data.getString("alma") + ":"+ data.getFloat("disy") +":");
+			//((TextView) findViewById(R.id.disxtext)).setText(Float.valueOf(data.getFloat("disx")).toString());
+			//((TextView) findViewById(R.id.disytext)).setText(Float.valueOf(data.getFloat("disy")).toString());			
 			//((BallView) findViewById(R.id.ballview)).
 			//	setCoord(data.getFloat("disx"),
 			//			 data.getFloat("disy"));		
@@ -101,9 +100,9 @@ public class BallActivity extends Activity implements SensorEventListener {
 		//data.putFloat("disy", disy);
 		((BallView) findViewById(R.id.ballview)).
 			setCoord(disx,disy);		
-		//Message msg = Message.obtain();
-		//msg.setData(data);
-		//rotvectEventHandler.sendMessage(msg);
+		Message msg = Message.obtain();
+		msg.setData(data);
+		rotvectEventHandler.sendMessage(msg);
 	}
 }
 

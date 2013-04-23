@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="#fff"
 >
+	
     <TextView 
         android:id="@+id/rotxtext"
         android:layout_width="match_parent"
@@ -20,7 +21,7 @@
         android:padding="10dp"
         android:textColor="#000"
         android:text="No Rotation Vector Sensor"
-	/>
+		/>
     <TextView 
         android:id="@+id/rotztext"
         android:layout_width="match_parent"
@@ -28,15 +29,15 @@
         android:padding="10dp"
         android:textColor="#000"
         android:text="No Rotation Vector Sensor"
-	/>
-    <TextView 
+		/>
+<!--    <TextView 
         android:id="@+id/disxtext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:textColor="#000"
         android:text="No Rotation Vector Sensor"
-	/>
+		/>
     <TextView 
         android:id="@+id/disytext"
         android:layout_width="match_parent"
@@ -45,9 +46,12 @@
         android:textColor="#000"
         android:text="No Rotation Vector Sensor"
 	/>
+	-->
 	<hu.rics.ball.BallView 
         android:id="@+id/ballview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0px"		
+        android:layout_weight="1"		
 	/>
+	
 </LinearLayout>	

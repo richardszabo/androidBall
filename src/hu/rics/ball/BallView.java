@@ -60,16 +60,19 @@ public class BallView extends View {
 		this.x = x;
 		this.y = y;
 		Log.i(TAG, "setCoord:" + x + ":"+ y +":");
-		Bundle data = new Bundle();
-		data.putFloat("xpos", 2.3f);
-		data.putFloat("ypos", 3.4f);
-		data.putString("alma", "jonatan");
-		Message msg = Message.obtain();
-		msg.setData(data);
-		parent.rotvectEventHandler.sendMessage(msg);
 		invalidate();
 	}
 
+    int width;
+    int height;
+    
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        this.width = w;
+        this.height = h;
+        super.onSizeChanged(w, h, oldw, oldh);
+    }
+    
     /**
      * @see android.view.View#onDraw(android.graphics.Canvas)
      */
@@ -77,18 +80,23 @@ public class BallView extends View {
         //canvas.drawColor(Color.WHITE);
 
         Paint paint = new Paint();
-		paint.setColor(Color.GRAY);
-		canvas.drawRect(0,0,canvas.getWidth(),canvas.getHeight(),paint);
+		paint.setColor(Color.GREEN);
+		canvas.drawRect(0,0,width,height,paint);
 		paint.setColor(Color.BLACK);
-		canvas.drawRect(10,10,canvas.getWidth()-10,canvas.getHeight()-10,paint);
+		canvas.drawRect(10,10,width-10,height-10,paint);
 		paint.setColor(Color.BLUE);
         paint.setStyle(Style.FILL);
-		int ypos = (int)(canvas.getWidth() * (1.0f + x)/2.0f);
-		int xpos = (int)(canvas.getHeight() * (1.0f + y)/2.0f);
-		Log.i(TAG, "onDraw:" + xpos + ":"+ ypos +":");
-		//((TextView) findViewById(R.id.disxtext)).setText(Float.valueOf(4.5f).toString());
-		if( xpos >= 0 && xpos <= canvas.getWidth() &&
-		    ypos >= 0 && ypos <= canvas.getHeight()) {
+		int ypos = (int)(height * (1.0f + x)/2.0f);
+		int xpos = (int)(width * (1.0f + y)/2.0f);
+		Log.i(TAG, "onDraw:" + xpos + "/"+ width +":" + ypos +"/" + height +":");
+		/*Bundle data = new Bundle();
+		data.putFloat("disx", xpos);
+		data.putFloat("disy", ypos);
+		Message msg = Message.obtain();
+		msg.setData(data);
+		parent.rotvectEventHandler.sendMessage(msg);*/
+		if( xpos >= 0 && xpos <= width &&
+		    ypos >= 0 && ypos <= height) {
 			 canvas.drawCircle(
 				 xpos,
 				 ypos,
