@@ -45,6 +45,16 @@ public class BallView extends View {
         super(context, attrs, defStyle);
         setFocusableInTouchMode(true);
 	}
+
+	public void setIsAdditive(boolean isAdditive)
+	{
+		this.isAdditive = isAdditive;
+	}
+
+	public boolean isAdditive()
+	{
+		return isAdditive;
+	}
 	
 	void setParent(BallActivity parent) {
 		this.parent = parent;	

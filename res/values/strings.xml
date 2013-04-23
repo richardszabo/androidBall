@@ -3,4 +3,8 @@
 
     <string name="app_name">Ball</string>
 
+    <string name="additive">Additive</string>
+    <string name="nonadd">Non add</string>
+	
+		
 </resources>

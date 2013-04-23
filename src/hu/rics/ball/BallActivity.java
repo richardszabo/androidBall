@@ -5,7 +5,9 @@ import android.content.*;
 import android.hardware.*;
 import android.os.*;
 import android.util.*;
+import android.view.*;
 import android.widget.*;
+import hu.rics.ball.*;
 import java.util.*;
 
 public class BallActivity extends Activity implements SensorEventListener {
@@ -104,5 +106,26 @@ public class BallActivity extends Activity implements SensorEventListener {
 		msg.setData(data);
 		rotvectEventHandler.sendMessage(msg);
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.ball, menu);
+		return true;
+	}
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+		BallView bv = ((BallView) findViewById(R.id.ballview));
+        switch (item.getItemId()) {
+			case R.id.additive:
+				bv.setIsAdditive(true);
+				return true;
+			case R.id.nonadd:
+				bv.setIsAdditive(false);
+				return true;
+        }
+        return false;
+    }
+	
 }
 
