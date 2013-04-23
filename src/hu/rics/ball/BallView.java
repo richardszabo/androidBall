@@ -25,10 +25,6 @@ public class BallView extends View {
     public BallView(Context context) {
         super(context);
         setFocusableInTouchMode(true);
-    }
-
-	void setParent(BallActivity parent) {
-		this.parent = parent;	
 	}
 	
     /**
@@ -48,10 +44,17 @@ public class BallView extends View {
     public BallView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setFocusableInTouchMode(true);
-    }
+	}
+	
+	void setParent(BallActivity parent) {
+		this.parent = parent;	
+	}
 
+	boolean isAdditive = true;
 	float x;
 	float y;
+	int xpos;
+	int ypos;
 	
     /**
      * @param dots
@@ -70,8 +73,10 @@ public class BallView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         this.width = w;
         this.height = h;
+		xpos = width / 2;
+		ypos = height / 2;
         super.onSizeChanged(w, h, oldw, oldh);
-    }
+	}
     
     /**
      * @see android.view.View#onDraw(android.graphics.Canvas)
@@ -86,8 +91,15 @@ public class BallView extends View {
 		canvas.drawRect(10,10,width-10,height-10,paint);
 		paint.setColor(Color.BLUE);
         paint.setStyle(Style.FILL);
-		int ypos = (int)(height * (1.0f + x)/2.0f);
-		int xpos = (int)(width * (1.0f + y)/2.0f);
+		if( isAdditive ) {
+			ypos += (int)(0.02 * height * x);
+			xpos += (int)(0.02 * width * y);
+		} else {
+			ypos = (int)(height * (1.0f + x)/2.0f);
+			xpos = (int)(width * (1.0f + y)/2.0f);
+		}
+		xpos = Math.min(width,Math.max(0,xpos));
+		ypos = Math.min(height,Math.max(0,ypos));
 		Log.i(TAG, "onDraw:" + xpos + "/"+ width +":" + ypos +"/" + height +":");
 		/*Bundle data = new Bundle();
 		data.putFloat("disx", xpos);
