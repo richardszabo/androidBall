@@ -1,0 +1,7 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:id="@+id/additive"
+		android:title="@string/additive" />
+    <item android:id="@+id/nonadd"
+		android:title="@string/nonadd" />
+</menu>
