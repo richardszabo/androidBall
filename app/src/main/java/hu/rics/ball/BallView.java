@@ -46,33 +46,18 @@ public class BallView extends View {
         setFocusableInTouchMode(true);
 	}
 
-	public void setIsAdditive(boolean isAdditive)
-	{
-		this.isAdditive = isAdditive;
-	}
-
-	public boolean isAdditive()
-	{
-		return isAdditive;
-	}
-	
 	void setParent(BallActivity parent) {
 		this.parent = parent;	
 	}
 
-	boolean isAdditive = true;
-	float x;
-	float y;
-	int xpos;
-	int ypos;
-	
-    /**
-     * @param dots
-     */
-    public void setCoord(float x, float y) {  
+	double x;
+	double y;
+	int radius = 15;
+
+    public void setCoord(double x, double y) {
 		this.x = x;
 		this.y = y;
-		Log.i(TAG, "setCoord:" + x + ":"+ y +":");
+		//Log.i(TAG, "setCoord:" + x + ":"+ y +":");
 		invalidate();
 	}
 
@@ -83,8 +68,7 @@ public class BallView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         this.width = w;
         this.height = h;
-		xpos = width / 2;
-		ypos = height / 2;
+		parent.ball.resetPosition(this.width-2*radius,this.height-2*radius); // -2*radius to handle border correctly
         super.onSizeChanged(w, h, oldw, oldh);
 	}
     
@@ -92,38 +76,19 @@ public class BallView extends View {
      * @see android.view.View#onDraw(android.graphics.Canvas)
      */
     @Override protected void onDraw(Canvas canvas) {
-        //canvas.drawColor(Color.WHITE);
-
         Paint paint = new Paint();
-		paint.setColor(Color.GREEN);
-		canvas.drawRect(0,0,width,height,paint);
 		paint.setColor(Color.BLACK);
-		canvas.drawRect(10,10,width-10,height-10,paint);
+		canvas.drawRect(0,0,width,height,paint);
 		paint.setColor(Color.BLUE);
         paint.setStyle(Style.FILL);
-		if( isAdditive ) {
-			ypos += (int)(0.02 * height * x);
-			xpos += (int)(0.02 * width * y);
-		} else {
-			ypos = (int)(height * (1.0f + x)/2.0f);
-			xpos = (int)(width * (1.0f + y)/2.0f);
-		}
-		xpos = Math.min(width,Math.max(0,xpos));
-		ypos = Math.min(height,Math.max(0,ypos));
-		Log.i(TAG, "onDraw:" + xpos + "/"+ width +":" + ypos +"/" + height +":");
-		/*Bundle data = new Bundle();
-		data.putFloat("disx", xpos);
-		data.putFloat("disy", ypos);
-		Message msg = Message.obtain();
-		msg.setData(data);
-		parent.rotvectEventHandler.sendMessage(msg);*/
-		if( xpos >= 0 && xpos <= width &&
-		    ypos >= 0 && ypos <= height) {
-			 canvas.drawCircle(
-				 xpos,
-				 ypos,
-				 5,
-				 paint);			 
-		}
+		// limiting just to be sure
+		int xpos = Math.min(width-radius,Math.max(radius,(int)x+radius));
+		int ypos = Math.min(height-radius,Math.max(radius,(int)y+radius));
+		//Log.i(TAG, "onDraw:" + xpos + "/"+ width +":" + ypos +"/" + height +":");
+		 canvas.drawCircle(
+			 xpos,
+			 ypos,
+			 radius,
+			 paint);
     }
 }

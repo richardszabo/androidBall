@@ -7,7 +7,7 @@
 >
 	
     <TextView 
-        android:id="@+id/rotxtext"
+        android:id="@+id/azimuthtext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
@@ -15,7 +15,7 @@
         android:text="No Rotation Vector Sensor"
 	/>
     <TextView 
-        android:id="@+id/rotytext"
+        android:id="@+id/pitchtext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
@@ -23,7 +23,7 @@
         android:text="No Rotation Vector Sensor"
 		/>
     <TextView 
-        android:id="@+id/rotztext"
+        android:id="@+id/rolltext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"

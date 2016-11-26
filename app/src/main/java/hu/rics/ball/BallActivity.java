@@ -10,23 +10,22 @@ import android.widget.*;
 import hu.rics.ball.*;
 import java.util.*;
 
+import static android.R.attr.angle;
+import static android.R.attr.data;
+import static android.R.attr.x;
+import static android.R.attr.y;
+
 public class BallActivity extends Activity implements SensorEventListener {
 
  	public static final String TAG = "Ball";	
-	private boolean hassensor;
+	private boolean hasSensor;
+	final float executionRate = 0.001f; // in sec
+	Ball ball;
 
-	final Handler rotvectEventHandler 				= new Handler() {
+	final Handler coordinatorChangeHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			Bundle data = msg.getData();
-			((TextView) findViewById(R.id.rotxtext)).setText(data.getString("x"));
-			((TextView) findViewById(R.id.rotytext)).setText(data.getString("y"));
-			((TextView) findViewById(R.id.rotztext)).setText(data.getString("z"));
-			//((TextView) findViewById(R.id.disxtext)).setText(Float.valueOf(data.getFloat("disx")).toString());
-			//((TextView) findViewById(R.id.disytext)).setText(Float.valueOf(data.getFloat("disy")).toString());			
-			//((BallView) findViewById(R.id.ballview)).
-			//	setCoord(data.getFloat("disx"),
-			//			 data.getFloat("disy"));		
+			((BallView) findViewById(R.id.ballview)).setCoord(ball.posX,ball.posY);
 		}
 	};
 
@@ -35,23 +34,35 @@ public class BallActivity extends Activity implements SensorEventListener {
         super.onCreate(savedInstanceState);
 
         if(getRotVectorSensors() == null) {
-			hassensor = false;
+			hasSensor = false;
 			Toast.makeText(this, "No Rotational Vector Sensors Available", Toast.LENGTH_SHORT).show();
 			finish();
 			return;
 		}
 
-		hassensor = true;
+		hasSensor = true;
 		setContentView(R.layout.ball);
 		((BallView) findViewById(R.id.ballview)).setParent(this);
-		
+
 		setTitle("Rotational Vector");
+		ball = new Ball();
+		Timer timer = new Timer();
+		TimerTask timertask = new TimerTask() {
+			public void run() {
+				ball.calculateAcceleration();
+				ball.updateVelocity(executionRate);
+				ball.updatePosition(executionRate);
+				//Log.i(TAG, "run:" + ball.posX + ":"+ ball.posY +":");
+				coordinatorChangeHandler.sendEmptyMessage(0);
+			}
+		};
+		timer.schedule(timertask,0,(int)(executionRate*1000));
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(hassensor) registerListener();
+		if(hasSensor) registerListener();
 	}
 
 	@Override
@@ -77,7 +88,7 @@ public class BallActivity extends Activity implements SensorEventListener {
 	}
 
 	private void unregisterListener() {
-		if(hassensor) {
+		if(hasSensor) {
 			SensorManager mngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 			mngr.unregisterListener(this);
 		}
@@ -88,23 +99,17 @@ public class BallActivity extends Activity implements SensorEventListener {
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		float rvx = event.values[0];
-		float rvy = event.values.length > 1 ? event.values[1] : 0;
-		float rvz = event.values.length > 2 ? event.values[2] : 0;
-		float disx = rvx / 0.57f;
-		float disy = rvy / 0.57f;
-		
-		Bundle data = new Bundle();
-		data.putString("x", "Rotational Vector X: "+rvx);
-		data.putString("y", "Rotational Vector Y: "+rvy);
-		data.putString("z", "Rotational Vector Z: "+rvz);
-		//data.putFloat("disx", disx);
-		//data.putFloat("disy", disy);
-		((BallView) findViewById(R.id.ballview)).
-			setCoord(disx,disy);		
-		Message msg = Message.obtain();
-		msg.setData(data);
-		rotvectEventHandler.sendMessage(msg);
+		float angleX = event.values[0];
+		float angleY = event.values.length > 1 ? event.values[1] : 0;
+		float angleZ = event.values.length > 2 ? event.values[2] : 0;
+		float rotationMatrix[] = new float[9];
+		SensorManager.getRotationMatrixFromVector(rotationMatrix,event.values);
+		float orientation[] = new float[3];
+		SensorManager.getOrientation(rotationMatrix,orientation);
+		((TextView) findViewById(R.id.azimuthtext)).setText(String.format("Azimuth: %2.4f",orientation[0]));
+		((TextView) findViewById(R.id.pitchtext)).setText(String.format(  "Pitch:   %2.4f",orientation[1]));
+		((TextView) findViewById(R.id.rolltext)).setText(String.format(   "Roll:    %2.4f",orientation[2]));
+		ball.calculateForce(-1 * orientation[1],orientation[2]);
 	}
 	
 	@Override
@@ -114,14 +119,13 @@ public class BallActivity extends Activity implements SensorEventListener {
 	}
 
     @Override
+	// TODO delete menu
     public boolean onOptionsItemSelected(MenuItem item) {
 		BallView bv = ((BallView) findViewById(R.id.ballview));
         switch (item.getItemId()) {
 			case R.id.additive:
-				bv.setIsAdditive(true);
 				return true;
 			case R.id.nonadd:
-				bv.setIsAdditive(false);
 				return true;
         }
         return false;
