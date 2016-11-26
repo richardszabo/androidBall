@@ -24,7 +24,7 @@ public class Ball {
     int height;
     double posX;
     double posY;
-    final int pixelsToMove = 25; // how many pixels to move by force
+    final int pixelsToMove = 150; // how many pixels to move by force
 
     void calculateForce(float angleX, float angleY) {
         // slope: m*g*sin(slopeAngle), rolling: 2/7* m*g*sin(slopeAngle), given that torque for sphere (Theta) is 2/5*m*r^2
@@ -35,8 +35,8 @@ public class Ball {
 
     void calculateAcceleration() {
         // acceleration
-        accelX = pixelsToMove * slopeForceX/mass;
-        accelY = pixelsToMove * slopeForceY/mass;
+        accelX = slopeForceX/mass;
+        accelY = slopeForceY/mass;
     }
 
     /**
@@ -78,8 +78,8 @@ public class Ball {
             speedY = 0;
         }
 
-        posX += speedX * executionRate;
-        posY += speedY * executionRate;
+        posX += pixelsToMove * speedX * executionRate;
+        posY += pixelsToMove * speedY * executionRate;
     }
 
 }
