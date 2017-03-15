@@ -77,15 +77,15 @@ public class BallActivity extends Activity implements SensorEventListener {
 		return list != null && !list.isEmpty() ? list : null;
 	}
 
-	private void registerListener() {
-		SensorManager mngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		List<Sensor> list = getRotVectorSensors();
-		if(list != null) {
-			for(Sensor sensor: list) {
-				mngr.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
-			}
-		}
-	}
+    private void registerListener() {
+        SensorManager mngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        List<Sensor> list = getRotVectorSensors();
+        if (list != null) {
+            for (Sensor sensor : list) {
+                mngr.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
+            }
+        }
+    }
 
 	private void unregisterListener() {
 		if(hasSensor) {
@@ -97,20 +97,20 @@ public class BallActivity extends Activity implements SensorEventListener {
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) { }
 
-	@Override
-	public void onSensorChanged(SensorEvent event) {
-		float angleX = event.values[0];
-		float angleY = event.values.length > 1 ? event.values[1] : 0;
-		float angleZ = event.values.length > 2 ? event.values[2] : 0;
-		float rotationMatrix[] = new float[9];
-		SensorManager.getRotationMatrixFromVector(rotationMatrix,event.values);
-		float orientation[] = new float[3];
-		SensorManager.getOrientation(rotationMatrix,orientation);
-		((TextView) findViewById(R.id.azimuthtext)).setText(String.format("Azimuth: %2.4f",orientation[0]));
-		((TextView) findViewById(R.id.pitchtext)).setText(String.format(  "Pitch:   %2.4f",orientation[1]));
-		((TextView) findViewById(R.id.rolltext)).setText(String.format(   "Roll:    %2.4f",orientation[2]));
-		ball.calculateForce(-1 * orientation[1],orientation[2]);
-	}
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        float angleX = event.values[0];
+        float angleY = event.values.length > 1 ? event.values[1] : 0;
+        float angleZ = event.values.length > 2 ? event.values[2] : 0;
+        float rotationMatrix[] = new float[9];
+        SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values);
+        float orientation[] = new float[3];
+        SensorManager.getOrientation(rotationMatrix, orientation);
+        ((TextView) findViewById(R.id.azimuthtext)).setText(String.format("Azimuth: %2.4f", orientation[0]));
+        ((TextView) findViewById(R.id.pitchtext)).setText(String.format("Pitch:   %2.4f", orientation[1]));
+        ((TextView) findViewById(R.id.rolltext)).setText(String.format("Roll:    %2.4f", orientation[2]));
+        ball.calculateForce(-1 * orientation[1], orientation[2]);
+    }
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
