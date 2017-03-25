@@ -74,6 +74,9 @@ public class BallActivity extends Activity implements SensorEventListener {
 	private List<Sensor> getRotVectorSensors() {
 		SensorManager mngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		List<Sensor> list = mngr.getSensorList(Sensor.TYPE_ROTATION_VECTOR);
+		//List<Sensor> list = mngr.getSensorList(Sensor.TYPE_GAME_ROTATION_VECTOR); API level 18
+		//https://developer.android.com/guide/topics/sensors/sensors_position.html#sensors-pos-geomrot API level 19
+		//https://developer.android.com/guide/topics/sensors/sensors_position.html#sensors-pos-orient
 		return list != null && !list.isEmpty() ? list : null;
 	}
 
