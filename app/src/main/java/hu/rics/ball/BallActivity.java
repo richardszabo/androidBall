@@ -15,12 +15,12 @@ import static android.R.attr.data;
 import static android.R.attr.x;
 import static android.R.attr.y;
 
-public class BallActivity extends Activity implements SensorEventListener {
+public class BallActivity extends Activity {
 
  	public static final String TAG = "Ball";	
-	private boolean hasSensor;
 	final float executionRate = 0.001f; // in sec
 	Ball ball;
+	BallSensor ballSensor;
 
 	final Handler coordinatorChangeHandler = new Handler() {
 		@Override
@@ -32,15 +32,8 @@ public class BallActivity extends Activity implements SensorEventListener {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		ballSensor = new BallSensor(this);
 
-        if(getRotVectorSensors() == null) {
-			hasSensor = false;
-			Toast.makeText(this, "No Rotational Vector Sensors Available", Toast.LENGTH_SHORT).show();
-			finish();
-			return;
-		}
-
-		hasSensor = true;
 		setContentView(R.layout.ball);
 		((BallView) findViewById(R.id.ballview)).setParent(this);
 
@@ -62,59 +55,28 @@ public class BallActivity extends Activity implements SensorEventListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(hasSensor) registerListener();
+		ballSensor.registerListener();
+		if( !ballSensor.hasAppropriateSensor() ) {
+			Toast.makeText(this, "No Rotational Vector Sensors Available", Toast.LENGTH_SHORT).show();
+			finish();
+			return;
+		}
+
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		unregisterListener();
+		ballSensor.unregisterListener();
 	}
 
-	private List<Sensor> getRotVectorSensors() {
-		SensorManager mngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		List<Sensor> list = mngr.getSensorList(Sensor.TYPE_ROTATION_VECTOR);
-		//List<Sensor> list = mngr.getSensorList(Sensor.TYPE_GAME_ROTATION_VECTOR); API level 18
-		//https://developer.android.com/guide/topics/sensors/sensors_position.html#sensors-pos-geomrot API level 19
-		//https://developer.android.com/guide/topics/sensors/sensors_position.html#sensors-pos-orient
-		return list != null && !list.isEmpty() ? list : null;
+	void setOrientationText(float orientation[]) {
+		((TextView) findViewById(R.id.azimuthtext)).setText(String.format("Azimuth: %2.4f", orientation[0]));
+		((TextView) findViewById(R.id.pitchtext)).setText(String.format("Pitch:   %2.4f", orientation[1]));
+		((TextView) findViewById(R.id.rolltext)).setText(String.format("Roll:    %2.4f", orientation[2]));
+		ball.calculateForce(-1 * orientation[1], orientation[2]);
 	}
 
-    private void registerListener() {
-        SensorManager mngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        List<Sensor> list = getRotVectorSensors();
-        if (list != null) {
-            for (Sensor sensor : list) {
-                mngr.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
-            }
-        }
-    }
-
-	private void unregisterListener() {
-		if(hasSensor) {
-			SensorManager mngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-			mngr.unregisterListener(this);
-		}
-	}
-
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) { }
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        float angleX = event.values[0];
-        float angleY = event.values.length > 1 ? event.values[1] : 0;
-        float angleZ = event.values.length > 2 ? event.values[2] : 0;
-        float rotationMatrix[] = new float[9];
-        SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values);
-        float orientation[] = new float[3];
-        SensorManager.getOrientation(rotationMatrix, orientation);
-        ((TextView) findViewById(R.id.azimuthtext)).setText(String.format("Azimuth: %2.4f", orientation[0]));
-        ((TextView) findViewById(R.id.pitchtext)).setText(String.format("Pitch:   %2.4f", orientation[1]));
-        ((TextView) findViewById(R.id.rolltext)).setText(String.format("Roll:    %2.4f", orientation[2]));
-        ball.calculateForce(-1 * orientation[1], orientation[2]);
-    }
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.ball, menu);
