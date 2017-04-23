@@ -3,10 +3,8 @@ package hu.rics.ball;
 import android.content.*;
 import android.graphics.*;
 import android.graphics.Paint.*;
-import android.os.*;
 import android.util.*;
 import android.view.*;
-import android.widget.*;
 
 /**
  * I see spots!
@@ -15,36 +13,28 @@ import android.widget.*;
  */
 public class BallView extends View {
 
- 	public static final String TAG = "Ball";
-	
  	BallActivity parent;
+    Paint paint;
 	
-    /**
-     * @param context the rest of the application
-     */
     public BallView(Context context) {
         super(context);
-        setFocusableInTouchMode(true);
+        init();
 	}
 	
-    /**
-     * @param context
-     * @param attrs
-     */
     public BallView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setFocusableInTouchMode(true);
+        init();
     }
 
-    /**
-     * @param context
-     * @param attrs
-     * @param defStyle
-     */
     public BallView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setFocusableInTouchMode(true);
+        init();
 	}
+
+	void init() {
+        paint = new Paint();
+        setFocusableInTouchMode(true);
+    }
 
 	void setParent(BallActivity parent) {
 		this.parent = parent;	
@@ -75,8 +65,8 @@ public class BallView extends View {
     /**
      * @see android.view.View#onDraw(android.graphics.Canvas)
      */
-    @Override protected void onDraw(Canvas canvas) {
-        Paint paint = new Paint();
+    @Override
+    protected void onDraw(Canvas canvas) {
 		paint.setColor(Color.BLACK);
 		canvas.drawRect(0,0,width,height,paint);
 		paint.setColor(Color.BLUE);

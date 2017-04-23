@@ -5,20 +5,13 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.widget.TextView;
 
 import java.util.List;
 
-import static android.R.id.list;
-
-/**
- * Created by rics on 2017.04.21..
- */
-
-public class BallSensor implements SensorEventListener {
-    BallActivity ballActivity;
-    SensorManager mngr;
-    List<Sensor> sensorList;
+class BallSensor implements SensorEventListener {
+    private BallActivity ballActivity;
+    private SensorManager mngr;
+    private List<Sensor> sensorList;
 
     BallSensor(BallActivity ballActivity) {
         this.ballActivity = ballActivity;
@@ -59,9 +52,6 @@ public class BallSensor implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        float angleX = sensorEvent.values[0];
-        float angleY = sensorEvent.values.length > 1 ? sensorEvent.values[1] : 0;
-        float angleZ = sensorEvent.values.length > 2 ? sensorEvent.values[2] : 0;
         float rotationMatrix[] = new float[9];
         SensorManager.getRotationMatrixFromVector(rotationMatrix, sensorEvent.values);
         float orientation[] = new float[3];

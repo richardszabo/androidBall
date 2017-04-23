@@ -1,23 +1,13 @@
 package hu.rics.ball;
 
 import android.app.*;
-import android.content.*;
-import android.hardware.*;
 import android.os.*;
-import android.util.*;
 import android.view.*;
 import android.widget.*;
-import hu.rics.ball.*;
 import java.util.*;
-
-import static android.R.attr.angle;
-import static android.R.attr.data;
-import static android.R.attr.x;
-import static android.R.attr.y;
 
 public class BallActivity extends Activity {
 
- 	public static final String TAG = "Ball";	
 	final float executionRate = 0.001f; // in sec
 	Ball ball;
 	BallSensor ballSensor;
@@ -59,7 +49,6 @@ public class BallActivity extends Activity {
 		if( !ballSensor.hasAppropriateSensor() ) {
 			Toast.makeText(this, "No Rotational Vector Sensors Available", Toast.LENGTH_SHORT).show();
 			finish();
-			return;
 		}
 
 	}
@@ -71,9 +60,9 @@ public class BallActivity extends Activity {
 	}
 
 	void setOrientationText(float orientation[]) {
-		((TextView) findViewById(R.id.azimuthtext)).setText(String.format("Azimuth: %2.4f", orientation[0]));
-		((TextView) findViewById(R.id.pitchtext)).setText(String.format("Pitch:   %2.4f", orientation[1]));
-		((TextView) findViewById(R.id.rolltext)).setText(String.format("Roll:    %2.4f", orientation[2]));
+		((TextView) findViewById(R.id.azimuthtext)).setText(String.format(Locale.US,"Azimuth: %2.4f", orientation[0]));
+		((TextView) findViewById(R.id.pitchtext)).setText(String.format(Locale.US,"Pitch:   %2.4f", orientation[1]));
+		((TextView) findViewById(R.id.rolltext)).setText(String.format(Locale.US,"Roll:    %2.4f", orientation[2]));
 		ball.calculateForce(-1 * orientation[1], orientation[2]);
 	}
 
@@ -86,7 +75,6 @@ public class BallActivity extends Activity {
     @Override
 	// TODO delete menu
     public boolean onOptionsItemSelected(MenuItem item) {
-		BallView bv = ((BallView) findViewById(R.id.ballview));
         switch (item.getItemId()) {
 			case R.id.additive:
 				return true;

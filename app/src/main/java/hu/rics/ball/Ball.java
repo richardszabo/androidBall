@@ -1,32 +1,22 @@
 package hu.rics.ball;
 
-import android.util.Log;
-
-import static android.R.attr.angle;
-import static android.R.attr.radius;
-
-/**
- * Created by rics on 2016.11.26..
- */
-
-public class Ball {
-    float mass = 1;
-    final float g = 10; // gravity
+class Ball {
+    private float mass = 1;
     // TODO use renderscript for vector coordinates?
-    double slopeForceX;
-    double slopeForceY;
-    double accelX;
-    double accelY;
-    double speedX;
-    double speedY;
+    private double slopeForceX;
+    private double slopeForceY;
+    private double accelX;
+    private double accelY;
+    private double speedX;
+    private double speedY;
     // position is limited to [0,width], [0,height] properties
-    int width;
-    int height;
+    private int width;
+    private int height;
     double posX;
     double posY;
-    final int pixelsToMove = 150; // how many pixels to move by force
 
     void calculateForce(float angleX, float angleY) {
+        final float g = 10; // gravity
         // slope: m*g*sin(slopeAngle), rolling: 2/7* m*g*sin(slopeAngle), given that torque for sphere (Theta) is 2/5*m*r^2
         //Log.i("Ball","angle:" + angleX + ":" + angleY);
         slopeForceX = mass * g * Math.sin(angleY) * 5 / 7;
@@ -61,6 +51,7 @@ public class Ball {
      * @param executionRate in sec
      */
     void updatePosition(float executionRate) {
+        final int pixelsToMove = 150; // how many pixels to move by force
         if( posX < 0 ) {
             posX = 0;
             speedX = 0;
