@@ -10,8 +10,12 @@ import java.util.List;
 
 class BallSensor implements SensorEventListener {
     private BallActivity ballActivity;
-    private SensorManager mngr;
+    private SensorManager sensorManager;
     private List<Sensor> sensorList;
+    private final float[] mAccelerometerReading = new float[3];
+    private final float[] mMagnetometerReading = new float[3];
+    float rotationMatrix[] = new float[9];
+    float orientation[] = new float[3];
 
     BallSensor(BallActivity ballActivity) {
         this.ballActivity = ballActivity;
@@ -19,14 +23,14 @@ class BallSensor implements SensorEventListener {
     }
 
     private void initSensorManager() {
-        mngr = (SensorManager) ballActivity.getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) ballActivity.getSystemService(Context.SENSOR_SERVICE);
     }
 
     void registerListener() {
         getAppropriateSensors();
         if ( hasAppropriateSensor() ) {
             for (Sensor sensor : sensorList) {
-                mngr.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
+                sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
             }
         }
     }
@@ -36,28 +40,63 @@ class BallSensor implements SensorEventListener {
     }
 
     void unregisterListener() {
-        if( mngr != null ) {
-            mngr.unregisterListener(this);
+        if( sensorManager != null ) {
+            sensorManager.unregisterListener(this);
         }
     }
 
     private void getAppropriateSensors() {
-        if( mngr != null ) {
-            sensorList = mngr.getSensorList(Sensor.TYPE_ROTATION_VECTOR);
-            //List<Sensor> list = mngr.getSensorList(Sensor.TYPE_GAME_ROTATION_VECTOR); API level 18
+        if( sensorManager != null ) {
+            getRotationSensor();
+            //List<Sensor> list = sensorManager.getSensorList(Sensor.TYPE_GAME_ROTATION_VECTOR); API level 18
             //https://developer.android.com/guide/topics/sensors/sensors_position.html#sensors-pos-geomrot API level 19
-            //https://developer.android.com/guide/topics/sensors/sensors_position.html#sensors-pos-orient
+            //getAcceleroMeterAndMagneticFieldSensorIfNeeded();
+        }
+    }
+
+    private void getRotationSensor() {
+        sensorList = sensorManager.getSensorList(Sensor.TYPE_ROTATION_VECTOR);
+    }
+
+    /**
+     * If there is no rotation vector sensor then the combination of accelerometer and magnetic field sensor substitutes it
+     * https://developer.android.com/guide/topics/sensors/sensors_position.html#sensors-pos-orient
+     */
+    private void getAcceleroMeterAndMagneticFieldSensorIfNeeded() {
+        if( !hasAppropriateSensor() ) { // no rotation vector
+            List acceleroMeterSensorList = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
+            List magneticFieldSensorList = sensorManager.getSensorList(Sensor.TYPE_MAGNETIC_FIELD);
+            if( acceleroMeterSensorList != null && !acceleroMeterSensorList.isEmpty() &&
+                    magneticFieldSensorList != null && !magneticFieldSensorList.isEmpty() ) {
+                sensorList.addAll(acceleroMeterSensorList);
+                sensorList.addAll(magneticFieldSensorList);
+            }
         }
     }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        float rotationMatrix[] = new float[9];
-        SensorManager.getRotationMatrixFromVector(rotationMatrix, sensorEvent.values);
-        float orientation[] = new float[3];
-        SensorManager.getOrientation(rotationMatrix, orientation);
+        if( sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR ) {
+            SensorManager.getRotationMatrixFromVector(rotationMatrix, sensorEvent.values);
+            SensorManager.getOrientation(rotationMatrix, orientation);
+        } else if( sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER ) {
+            System.arraycopy(sensorEvent.values, 0, mAccelerometerReading,
+                    0, mAccelerometerReading.length);
+            updateOrientationAngles();
+        } else if( sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD ) {
+            System.arraycopy(sensorEvent.values, 0, mMagnetometerReading,
+                    0, mMagnetometerReading.length);
+            updateOrientationAngles();
+        }
         ballActivity.setOrientationText(orientation);
     }
+
+    private void updateOrientationAngles() {
+        sensorManager.getRotationMatrix(rotationMatrix, null,
+                mAccelerometerReading, mMagnetometerReading);
+        sensorManager.getOrientation(rotationMatrix, orientation);
+    }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
