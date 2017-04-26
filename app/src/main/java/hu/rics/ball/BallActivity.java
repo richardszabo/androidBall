@@ -27,7 +27,6 @@ public class BallActivity extends Activity {
 		setContentView(R.layout.ball);
 		((BallView) findViewById(R.id.ballview)).setParent(this);
 
-		setTitle("Rotational Vector");
 		ball = new Ball();
 		Timer timer = new Timer();
 		TimerTask timertask = new TimerTask() {
@@ -35,7 +34,6 @@ public class BallActivity extends Activity {
 				ball.calculateAcceleration();
 				ball.updateVelocity(executionRate);
 				ball.updatePosition(executionRate);
-				//Log.i(TAG, "run:" + ball.posX + ":"+ ball.posY +":");
 				coordinatorChangeHandler.sendEmptyMessage(0);
 			}
 		};
@@ -47,10 +45,9 @@ public class BallActivity extends Activity {
 		super.onResume();
 		ballSensor.registerListener();
 		if( !ballSensor.hasAppropriateSensor() ) {
-			Toast.makeText(this, "No Rotational Vector Sensors Available", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "No appropriate sensors are available", Toast.LENGTH_SHORT).show();
 			finish();
 		}
-
 	}
 
 	@Override
@@ -83,6 +80,6 @@ public class BallActivity extends Activity {
         }
         return false;
     }
-	
+
 }
 

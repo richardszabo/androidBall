@@ -30,24 +30,7 @@
         android:textColor="#000"
         android:text="No Rotation Vector Sensor"
 		/>
-<!--    <TextView 
-        android:id="@+id/disxtext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textColor="#000"
-        android:text="No Rotation Vector Sensor"
-		/>
-    <TextView 
-        android:id="@+id/disytext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textColor="#000"
-        android:text="No Rotation Vector Sensor"
-	/>
-	-->
-	<hu.rics.ball.BallView 
+	<hu.rics.ball.BallView
         android:id="@+id/ballview"
         android:layout_width="match_parent"
         android:layout_height="0px"		
