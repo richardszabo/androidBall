@@ -47,7 +47,6 @@ public class BallView extends View {
     public void setCoord(double x, double y) {
 		this.x = x;
 		this.y = y;
-		//Log.i(TAG, "setCoord:" + x + ":"+ y +":");
 		invalidate();
 	}
 
@@ -74,8 +73,7 @@ public class BallView extends View {
 		// limiting just to be sure
 		int xpos = Math.min(width-radius,Math.max(radius,(int)x+radius));
 		int ypos = Math.min(height-radius,Math.max(radius,(int)y+radius));
-		//Log.i(TAG, "onDraw:" + xpos + "/"+ width +":" + ypos +"/" + height +":");
-		 canvas.drawCircle(
+ 	    canvas.drawCircle(
 			 xpos,
 			 ypos,
 			 radius,

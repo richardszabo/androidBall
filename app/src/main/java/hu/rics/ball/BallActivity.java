@@ -2,7 +2,6 @@ package hu.rics.ball;
 
 import android.app.*;
 import android.os.*;
-import android.view.*;
 import android.widget.*;
 import java.util.*;
 
@@ -61,24 +60,5 @@ public class BallActivity extends Activity {
 		((TextView) findViewById(R.id.rolltext)).setText(String.format(Locale.US,"Roll:    %2.4f", orientation[2]));
 		ball.calculateForce(-1 * orientation[1], orientation[2]);
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.ball, menu);
-		return true;
-	}
-
-    @Override
-	// TODO delete menu
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-			case R.id.additive:
-				return true;
-			case R.id.nonadd:
-				return true;
-        }
-        return false;
-    }
-
 }
 
