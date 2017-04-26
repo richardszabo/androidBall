@@ -6,15 +6,7 @@
     android:background="#fff"
 >
 	
-    <TextView 
-        android:id="@+id/azimuthtext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textColor="#000"
-        android:text="No Rotation Vector Sensor"
-	/>
-    <TextView 
+    <TextView
         android:id="@+id/pitchtext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

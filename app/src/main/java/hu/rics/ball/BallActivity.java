@@ -57,7 +57,6 @@ public class BallActivity extends Activity {
 	}
 
 	void setOrientationText(float orientation[]) {
-		((TextView) findViewById(R.id.azimuthtext)).setText(String.format(Locale.US,"Azimuth: %2.4f", orientation[0]));
 		((TextView) findViewById(R.id.pitchtext)).setText(String.format(Locale.US,"Pitch:   %2.4f", orientation[1]));
 		((TextView) findViewById(R.id.rolltext)).setText(String.format(Locale.US,"Roll:    %2.4f", orientation[2]));
 		ball.calculateForce(-1 * orientation[1], orientation[2]);
