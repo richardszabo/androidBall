@@ -5,7 +5,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class BallSensor implements SensorEventListener {
@@ -50,7 +52,12 @@ class BallSensor implements SensorEventListener {
             getRotationSensor();
             //List<Sensor> list = sensorManager.getSensorList(Sensor.TYPE_GAME_ROTATION_VECTOR); API level 18
             //https://developer.android.com/guide/topics/sensors/sensors_position.html#sensors-pos-geomrot API level 19
-            //getAcceleroMeterAndMagneticFieldSensorIfNeeded();
+            if( hasAppropriateSensor() ) {
+                Log.d("Ball", "Rotation sensor is available");
+            } else {
+                Log.d("Ball", "Rotation sensor is NOT available");
+            }
+            getAcceleroMeterAndMagneticFieldSensorIfNeeded();
         }
     }
 
@@ -68,8 +75,12 @@ class BallSensor implements SensorEventListener {
             List magneticFieldSensorList = sensorManager.getSensorList(Sensor.TYPE_MAGNETIC_FIELD);
             if( acceleroMeterSensorList != null && !acceleroMeterSensorList.isEmpty() &&
                     magneticFieldSensorList != null && !magneticFieldSensorList.isEmpty() ) {
+                Log.d("Ball", "Accelerometer and magnetic field is available");
+                sensorList = new ArrayList<Sensor>();
                 sensorList.addAll(acceleroMeterSensorList);
                 sensorList.addAll(magneticFieldSensorList);
+            } else {
+                Log.d("Ball", "Accelerometer and magnetic field is NOT available");
             }
         }
     }
