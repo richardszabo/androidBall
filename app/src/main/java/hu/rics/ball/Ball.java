@@ -39,11 +39,14 @@ class Ball {
         //Log.i("Ball","speed:" + speedX + ":" + speedY);
     }
 
-    void resetPosition(int w, int h) {
+    void setArenaSize(int w, int h) {
         width = w;
         height = h;
-        posX = w/2;
-        posY = h/2;
+    }
+
+    void resetPosition() {
+        posX = width/2;
+        posY = height/2;
     }
 
     /**

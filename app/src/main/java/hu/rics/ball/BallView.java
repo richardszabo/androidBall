@@ -57,7 +57,8 @@ public class BallView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         this.width = w;
         this.height = h;
-		parent.ball.resetPosition(this.width-2*radius,this.height-2*radius); // -2*radius to handle border correctly
+        parent.ball.setArenaSize(this.width-2*radius,this.height-2*radius); // -2*radius to handle border correctly
+		parent.ball.resetPosition();
         super.onSizeChanged(w, h, oldw, oldh);
 	}
     
