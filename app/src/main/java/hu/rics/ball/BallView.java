@@ -6,11 +6,6 @@ import android.graphics.Paint.*;
 import android.util.*;
 import android.view.*;
 
-/**
- * I see spots!
- *
- * @author <a href="mailto:android@callmeike.net">Blake Meike</a>
- */
 public class BallView extends View {
 
  	BallActivity parent;
@@ -62,9 +57,6 @@ public class BallView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
 	}
     
-    /**
-     * @see android.view.View#onDraw(android.graphics.Canvas)
-     */
     @Override
     protected void onDraw(Canvas canvas) {
 		paint.setColor(Color.BLACK);
