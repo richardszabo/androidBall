@@ -28,7 +28,7 @@ public class BallView extends View {
 
 	void init() {
         paint = new Paint();
-        setFocusableInTouchMode(true);
+        //setFocusableInTouchMode(true);
     }
 
 	void setParent(BallActivity parent) {
